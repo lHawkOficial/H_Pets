@@ -1,0 +1,9 @@
+name: H_Pets
+version: 0.1
+author: lHawk_
+description: crie seu pet e evolue-o!
+main: me.hpets.Core
+commands:
+  pet:
+    description: comando geral do plugin.
+    aliases: [pets, hp, hawkpets, hawkpet]
