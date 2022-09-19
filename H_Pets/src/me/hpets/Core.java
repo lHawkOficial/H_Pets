@@ -1,9 +1,14 @@
 package me.hpets;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import lombok.Getter;
+import me.hpets.listeners.ListenerPlayer;
 import me.hpets.managers.Manager;
 import me.hpets.objects.PlayerPet;
 
@@ -20,6 +25,10 @@ public class Core extends JavaPlugin {
 		instance = this;
 		saveDefaultConfig();
 		reloadPlugin();
+		
+		List<Listener> events = new ArrayList<>();
+		events.add(new ListenerPlayer());
+		events.forEach(event -> Bukkit.getPluginManager().registerEvents(event, this));
 		
 		sendConsole(" ");
 		sendConsole(tag + " &aH_Pets iniciado com sucesso! &6[Author lHawk_] " + version);
