@@ -4,6 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import lombok.Getter;
+import me.hpets.managers.Manager;
+import me.hpets.objects.PlayerPet;
 
 @Getter
 public class Core extends JavaPlugin {
@@ -11,6 +13,7 @@ public class Core extends JavaPlugin {
 	@Getter
 	private static Core instance;
 	private String tag, version = "§dv" + getDescription().getVersion();
+	private Manager manager;
 	
 	@Override
 	public void onEnable() {
@@ -33,6 +36,8 @@ public class Core extends JavaPlugin {
 	public void reloadPlugin() {
 		reloadConfig();
 		tag = getConfig().getString("Config.tag").replace("&", "§");
+		manager = new Manager();
+		PlayerPet.checkAll();
 	}
 	
 	public void sendConsole(String msg) {Bukkit.getConsoleSender().sendMessage(msg.replace("&", "§"));}

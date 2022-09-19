@@ -1,6 +1,7 @@
 name: H_Pets
 version: 0.1
 author: lHawk_
+depend: [HawkCore]
 description: crie seu pet e evolue-o!
 main: me.hpets.Core
 commands:
