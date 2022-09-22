@@ -3,3 +3,6 @@ Config:
   
   # Prefixo do servidor
   tag: "&3[&lP&3ets]"
+  
+  # coloque aqui o item que o jogador deve estar segurando para domar o mob (do ItemCreator)
+  tameItem: corda
