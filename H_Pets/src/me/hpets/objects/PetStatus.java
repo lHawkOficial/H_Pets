@@ -5,13 +5,14 @@ import org.bukkit.entity.LivingEntity;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.hpets.objects.petutils.enums.StatusPet;
 
 @Getter
 @Setter
 public class PetStatus {
 
 	private Pet pet;
-	private Status status = Status.PASSIVE;
+	private StatusPet status = StatusPet.PASSIVE;
 	private Entity target;
 	private long lastDamage;
 	
@@ -22,7 +23,7 @@ public class PetStatus {
 	public void attack(LivingEntity entity) {
 		this.lastDamage = System.currentTimeMillis();
 		this.target = entity;
-		this.status = Status.AGRESSIVE;
+		this.status = StatusPet.AGRESSIVE;
 	}
 	
 }

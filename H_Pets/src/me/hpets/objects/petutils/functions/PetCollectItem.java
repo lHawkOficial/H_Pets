@@ -12,8 +12,8 @@ import me.hawkcore.utils.locations.Distance;
 import me.hpets.objects.Pet;
 import me.hpets.objects.PetStatus;
 import me.hpets.objects.PlayerPet;
-import me.hpets.objects.Status;
 import me.hpets.objects.petutils.PetFunctions;
+import me.hpets.objects.petutils.enums.StatusPet;
 
 public class PetCollectItem extends PetFunctions implements Runnable {
 
@@ -38,8 +38,8 @@ private API api = API.get();
 		double speed = pet.getSpeed().getValue();
 		if (p == null) return;
 		if (inv.firstEmpty() == -1) return;
-		if (System.currentTimeMillis() - delayCollect < 90) return;
-		if (target == null && mode.getStatus() != Status.AGRESSIVE) {
+		if (System.currentTimeMillis() - delayCollect < 200) return;
+		if (target == null && mode.getStatus() != StatusPet.AGRESSIVE) {
 			mode.setTarget(pet.getItemNext());
 			delayCollect = System.currentTimeMillis();
 			return;

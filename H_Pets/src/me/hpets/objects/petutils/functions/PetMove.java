@@ -18,8 +18,8 @@ import me.hawkcore.utils.locations.Distance;
 import me.hpets.objects.Pet;
 import me.hpets.objects.PetStatus;
 import me.hpets.objects.PlayerPet;
-import me.hpets.objects.Status;
 import me.hpets.objects.petutils.PetFunctions;
+import me.hpets.objects.petutils.enums.StatusPet;
 
 @Getter
 public class PetMove extends PetFunctions implements Runnable {
@@ -41,10 +41,10 @@ public class PetMove extends PetFunctions implements Runnable {
 		if (p == null) return;
 		
 		PetStatus mode = pet.getMode();
-		Status status = mode.getStatus();
+		StatusPet status = mode.getStatus();
 		double speed = pet.getSpeed().getValue();
 		if (mode.getTarget() != null && mode.getTarget() instanceof Item) return;
-		if (status == Status.PASSIVE) {
+		if (status == StatusPet.PASSIVE) {
 			Location loc = p.getLocation();
 			Distance distance = new Distance(loc, entity.getLocation());
 			double value = distance.value();
@@ -54,7 +54,7 @@ public class PetMove extends PetFunctions implements Runnable {
 				return;
 			}
 			api.makeEntityMoveTo(entity, p.getLocation(), speed);
-		}else if (System.currentTimeMillis() - mode.getLastDamage() >= 160) {
+		}else if (System.currentTimeMillis() - mode.getLastDamage() >= 300) {
 			Entity target = mode.getTarget();
 			if (target != null && !target.isDead() && target.isValid() && target instanceof LivingEntity && !target.getUniqueId().equals(entity.getUniqueId())) {
 				api.makeEntityMoveTo(entity, target.getLocation(), speed);
@@ -73,7 +73,7 @@ public class PetMove extends PetFunctions implements Runnable {
 					Bukkit.getPluginManager().callEvent(event);
 				});
 			} else {
-				mode.setStatus(Status.PASSIVE);
+				mode.setStatus(StatusPet.PASSIVE);
 				mode.setTarget(null);
 			}
 		}
