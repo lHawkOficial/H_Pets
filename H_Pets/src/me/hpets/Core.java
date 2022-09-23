@@ -15,8 +15,10 @@ import me.hpets.commands.CommandPet;
 import me.hpets.listeners.ListenerPets;
 import me.hpets.listeners.ListenerPlayer;
 import me.hpets.managers.Manager;
+import me.hpets.objects.Pet;
 import me.hpets.objects.PlayerPet;
 import me.hpets.utils.ConfigGeral;
+import me.hpets.utils.Mensagens;
 
 @Getter
 public class Core extends JavaPlugin {
@@ -26,6 +28,7 @@ public class Core extends JavaPlugin {
 	private String tag, version = "§dv" + getDescription().getVersion();
 	private Manager manager;
 	private ConfigGeral configgeral;
+	private Mensagens mensagens;
 	
 	@Override
 	public void onEnable() {
@@ -63,10 +66,15 @@ public class Core extends JavaPlugin {
 		reloadConfig();
 		tag = getConfig().getString("Config.tag").replace("&", "§");
 		if (manager!=null) {
-			manager.getPlayers().forEach(p -> p.getPet().getTask().cancel());
+			manager.getPlayers().forEach(p -> {
+				Pet pet = p.getPet();
+				pet.remove();
+				pet.getTask().cancel();
+			});
 		}
 		manager = new Manager();
 		configgeral = new ConfigGeral();
+		mensagens = new Mensagens();
 		
 		File folder = new File(getDataFolder() + "/players");
 		if (folder.exists()) {

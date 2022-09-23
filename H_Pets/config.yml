@@ -6,3 +6,16 @@ Config:
   
   # coloque aqui o item que o jogador deve estar segurando para domar o mob (do ItemCreator)
   tameItem: corda
+  
+# Configure aqui suas mensagens
+Mensagens:
+  petTamed: "{tag} &aVoce domou um novo pet para ver os comandos utilize /pet."
+  petDeath: "{tag} &cSeu pet morreu, para spawna-lo novamente utilize /pet [Spawn]"
+  petCooldown: "{tag} &cPara chamar seu pet novamente você precisa esperar &4{tempo}&c!"
+  petMode: "{tag} &aVoce alterou o modo do seu pet para &f{mode}&a!"
+  petModeSelected: "{tag} &cEste modo ja esta selecionado!"
+  petName: "{tag} &7Voce alterou o nome do seu pet para &f{nome}&7!"
+  petHide: "{tag} &cVoce mandou o seu pet para casa! para chama-lo de volta use /pet [Spawn]."
+  petSpawn: "{tag} &aSeu pet foi spawnado na sua localizacao."
+  petSpawned: "{tag} &cSeu pet ja foi spawnado!"
+  

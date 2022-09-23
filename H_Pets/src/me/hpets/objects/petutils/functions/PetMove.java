@@ -2,8 +2,10 @@ package me.hpets.objects.petutils.functions;
 
 import org.bukkit.Bukkit;
 
+
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -40,6 +42,8 @@ public class PetMove extends PetFunctions implements Runnable {
 		
 		PetStatus mode = pet.getMode();
 		Status status = mode.getStatus();
+		double speed = pet.getSpeed().getValue();
+		if (mode.getTarget() != null && mode.getTarget() instanceof Item) return;
 		if (status == Status.PASSIVE) {
 			Location loc = p.getLocation();
 			Distance distance = new Distance(loc, entity.getLocation());
@@ -49,11 +53,11 @@ public class PetMove extends PetFunctions implements Runnable {
 				Task.run(()-> entity.teleport(p.getLocation()));
 				return;
 			}
-			api.makeEntityMoveTo(entity, p.getLocation(), 1.5);
-		}else if (System.currentTimeMillis() - mode.getLastDamage() >= 600) {
+			api.makeEntityMoveTo(entity, p.getLocation(), speed);
+		}else if (System.currentTimeMillis() - mode.getLastDamage() >= 160) {
 			Entity target = mode.getTarget();
-			if (target != null && !target.isDead() && target.isValid() && target instanceof LivingEntity && !target.equals(entity)) {
-				api.makeEntityMoveTo(entity, target.getLocation(), 2.5);
+			if (target != null && !target.isDead() && target.isValid() && target instanceof LivingEntity && !target.getUniqueId().equals(entity.getUniqueId())) {
+				api.makeEntityMoveTo(entity, target.getLocation(), speed);
 				Distance distance = new Distance(target.getLocation(), entity.getLocation());
 				double value = distance.value();
 				if (value > 20) {
@@ -62,11 +66,16 @@ public class PetMove extends PetFunctions implements Runnable {
 				}
 				if (value > 1) return;
 				mode.setLastDamage(System.currentTimeMillis());
-				((LivingEntity)target).damage(2, entity);
-				EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(entity, target, DamageCause.ENTITY_ATTACK, 2);
-				target.setLastDamageCause(event);
-				Bukkit.getPluginManager().callEvent(event);
-			} else mode.setStatus(Status.PASSIVE);
+				Task.run(()->{
+					((LivingEntity)target).damage(2, entity);
+					EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(entity, target, DamageCause.ENTITY_ATTACK, 2);
+					target.setLastDamageCause(event);
+					Bukkit.getPluginManager().callEvent(event);
+				});
+			} else {
+				mode.setStatus(Status.PASSIVE);
+				mode.setTarget(null);
+			}
 		}
 		
 	}

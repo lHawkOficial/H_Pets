@@ -1,10 +1,16 @@
 package me.hpets.objects;
 
-import org.bukkit.Bukkit;
+import java.util.ArrayList;
 
+import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -13,6 +19,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.hawkcore.Core;
 import me.hawkcore.tasks.Task;
+import me.hawkcore.utils.locations.Distance;
 import me.hpets.objects.petutils.PetAI;
 import net.minecraft.server.v1_8_R3.MojangsonParseException;
 import net.minecraft.server.v1_8_R3.MojangsonParser;
@@ -50,6 +57,36 @@ public class Pet {
 		}
 	}
 	
+	public Item getItemNext() {
+		if (entity == null) return null;
+		World world = entity.getWorld();
+		Location loc = entity.getLocation().clone();
+		double value = 16;
+		Item item = null;
+		for(Entity entity : world.getEntitiesByClass(Item.class)) {
+			Distance distance = new Distance(entity.getLocation(), loc);
+			Double v = distance.value();
+			if (v > 16) continue;
+			if (v <= value) {
+				value = v;
+				item = (Item) entity;
+				continue;
+			}
+		}
+		return item;
+	}
+	
+	public List<Player> getPlayerNext() {
+		List<Player> list = new ArrayList<>();
+		if (entity == null) return list;
+		for(Player p : Bukkit.getOnlinePlayers()) {
+			if (!p.getWorld().equals(entity.getWorld())) continue;
+			if (new Distance(p.getLocation(), entity.getLocation()).value() > 10) continue;
+			list.add(p);
+		}
+		return list;
+	}
+	
 	public NBTTagCompound getNbt() {
 		return entity == null ? null : ((CraftEntity)entity).getHandle().getNBTTag();
 	}
@@ -74,9 +111,8 @@ public class Pet {
 	}
 	
 	public void delete() {
-		entity.remove();
 		type = null;
-		player.save();
+		remove();
 	}
 	
 	public static Pet get(Player p) {

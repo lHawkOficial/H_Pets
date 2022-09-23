@@ -2,11 +2,13 @@ package me.hpets.objects.petutils;
 
 import java.util.ArrayList;
 
+
 import java.util.List;
 
 import lombok.Getter;
 import me.hpets.objects.Pet;
 import me.hpets.objects.PlayerPet;
+import me.hpets.objects.petutils.functions.PetCollectItem;
 import me.hpets.objects.petutils.functions.PetMove;
 
 @Getter
@@ -20,17 +22,20 @@ public class PetAI implements Runnable {
 		this.player = player;
 		this.pet = pet;
 		runnables.add(new PetMove(player, pet));
+		runnables.add(new PetCollectItem(player, pet));
 	}
 	
 	@Override
 	public void run() {
 		
 		if (runnables.isEmpty()) return;
+		if (!player.containsPet()) return;
 		if (!pet.isValid()) return;
 		for (int i = 0; i < runnables.size(); i++) {
 			try {
 				runnables.get(i).run();
 			} catch (Exception e) {
+				e.printStackTrace();
 				continue;
 			}
 		}

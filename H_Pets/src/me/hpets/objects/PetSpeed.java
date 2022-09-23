@@ -14,8 +14,10 @@ public class PetSpeed {
 	public PetSpeed(Pet pet, double maxSpeed) {
 		this.pet = pet;
 		this.maxSpeed = maxSpeed;
-		this.value = 1.1;
-		System.out.println("Valor speed pet: " + getValue());
+	}
+	
+	public double getValue() {
+		return 1.95;
 	}
 	
 }

@@ -3,6 +3,7 @@ package me.hpets.objects;
 import java.io.File;
 
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,11 +50,11 @@ public class PlayerPet {
 	}
 	
 	public void saveAsync() {
-		Task.runAsync(()-> save() );
+		Task.runAsync(()-> save());
 	}
 	
 	public Boolean containsPet() {
-		return pet.getType() != null;
+		return pet == null ? false : pet.getType() != null;
 	}
 	
 	public void save() {
