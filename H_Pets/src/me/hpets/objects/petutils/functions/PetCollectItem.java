@@ -38,8 +38,8 @@ private API api = API.get();
 		double speed = pet.getSpeed().getValue();
 		if (p == null) return;
 		if (inv.firstEmpty() == -1) return;
-		if (System.currentTimeMillis() - delayCollect < 200) return;
-		if (target == null && mode.getStatus() != StatusPet.AGRESSIVE) {
+		if (System.currentTimeMillis() - delayCollect < 50) return;
+		if (target == null && mode.getStatus() == StatusPet.PASSIVE) {
 			mode.setTarget(pet.getItemNext());
 			delayCollect = System.currentTimeMillis();
 			return;
@@ -59,7 +59,7 @@ private API api = API.get();
 		Task.run(()-> {
 			inv.addItem(item.getItemStack().clone());
 			item.remove();
-			pet.getPlayerNext().forEach(all -> all.playSound(entity.getLocation(), Sound.ITEM_PICKUP, 0.8f, 1));
+			pet.getPlayerNext().forEach(all -> all.playSound(entity.getLocation(), Sound.ITEM_PICKUP, 0.5f, 1.25f));
 		});
 	}
 	

@@ -17,7 +17,7 @@ public class PetSpeed {
 	}
 	
 	public double getValue() {
-		return 1.95;
+		return 2.5;
 	}
 	
 }

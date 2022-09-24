@@ -50,7 +50,9 @@ public class Core extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		manager.getPlayers().forEach(p -> {
-			if (p.getPet().getEntity() != null) p.getPet().remove();
+			Pet pet = p.getPet();
+			pet.remove();
+			pet.getTask().cancel();
 		});
 		for(World world : Bukkit.getWorlds()) {
 			for(Entity entity : world.getEntities()) {

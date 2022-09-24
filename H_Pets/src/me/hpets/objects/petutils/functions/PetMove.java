@@ -25,6 +25,8 @@ import me.hpets.objects.petutils.enums.StatusPet;
 public class PetMove extends PetFunctions implements Runnable {
 	
 	private API api = API.get();
+	private double attackDelay = 0;
+	private double attackDamage = 0.5;
 	
 	public PetMove(PlayerPet player, Pet pet) {
 		super(player, pet);
@@ -49,26 +51,26 @@ public class PetMove extends PetFunctions implements Runnable {
 			Distance distance = new Distance(loc, entity.getLocation());
 			double value = distance.value();
 			if (value <= 5) return;
-			if (value > 20) {
+			if (value > 16) {
 				Task.run(()-> entity.teleport(p.getLocation()));
 				return;
 			}
 			api.makeEntityMoveTo(entity, p.getLocation(), speed);
-		}else if (System.currentTimeMillis() - mode.getLastDamage() >= 300) {
+		}else if (System.currentTimeMillis() - mode.getLastDamage() >= attackDelay) {
 			Entity target = mode.getTarget();
-			if (target != null && !target.isDead() && target.isValid() && target instanceof LivingEntity && !target.getUniqueId().equals(entity.getUniqueId())) {
+			if (target != null && !target.isDead() && target.isValid() && target instanceof LivingEntity && !target.getUniqueId().equals(entity.getUniqueId()) && !target.getName().equals(player.getName())) {
 				api.makeEntityMoveTo(entity, target.getLocation(), speed);
 				Distance distance = new Distance(target.getLocation(), entity.getLocation());
 				double value = distance.value();
-				if (value > 20) {
+				if (value > 16) {
 					Task.run(()-> entity.teleport(target.getLocation()));
 					return;
 				}
-				if (value > 1) return;
+				if (value > 1.25) return;
 				mode.setLastDamage(System.currentTimeMillis());
 				Task.run(()->{
-					((LivingEntity)target).damage(2, entity);
-					EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(entity, target, DamageCause.ENTITY_ATTACK, 2);
+					((LivingEntity)target).damage(attackDamage, entity);
+					EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(entity, target, DamageCause.ENTITY_ATTACK, attackDamage);
 					target.setLastDamageCause(event);
 					Bukkit.getPluginManager().callEvent(event);
 				});
