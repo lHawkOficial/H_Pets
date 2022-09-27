@@ -47,11 +47,11 @@ public class PetMove extends PetFunctions implements Runnable {
 		double speed = pet.getSpeed().getValue();
 		
 		if (entity.getPassenger() != null && entity.getPassenger().equals(p)) {
-			api.makeEntityMoveTo(entity, api.getLocationInFrontEntity(p, 3.5), speed);
+			api.makeEntityMoveTo(entity, api.getLocationInFrontEntity(p, 3.5), speed/2);
 			return;
 		}
 		if (mode.getTarget() != null && mode.getTarget() instanceof Item) return;
-		if (mode.getTarget() != null && new Distance(mode.getTarget().getLocation(), entity.getLocation()).value() > 16) {
+		if (mode.getTarget() != null && new Distance(p.getLocation(), entity.getLocation()).value() > 16) {
 			mode.setTarget(null);
 			return;
 		}
