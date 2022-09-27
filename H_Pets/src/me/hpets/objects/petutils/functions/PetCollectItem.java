@@ -1,6 +1,7 @@
 package me.hpets.objects.petutils.functions;
 
 import org.bukkit.Sound;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -13,7 +14,6 @@ import me.hpets.objects.Pet;
 import me.hpets.objects.PetStatus;
 import me.hpets.objects.PlayerPet;
 import me.hpets.objects.petutils.PetFunctions;
-import me.hpets.objects.petutils.enums.StatusPet;
 
 public class PetCollectItem extends PetFunctions implements Runnable {
 
@@ -38,8 +38,8 @@ private API api = API.get();
 		double speed = pet.getSpeed().getValue();
 		if (p == null) return;
 		if (inv.firstEmpty() == -1) return;
-		if (System.currentTimeMillis() - delayCollect < 50) return;
-		if (target == null && mode.getStatus() == StatusPet.PASSIVE) {
+		if (System.currentTimeMillis() - delayCollect < 200) return;
+		if (target == null) {
 			mode.setTarget(pet.getItemNext());
 			delayCollect = System.currentTimeMillis();
 			return;

@@ -113,6 +113,7 @@ public class Pet {
 	public void delete() {
 		type = null;
 		remove();
+		player.save();
 	}
 	
 	public static Pet get(Player p) {

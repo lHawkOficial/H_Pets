@@ -4,6 +4,8 @@ import org.bukkit.Material;
 
 
 
+
+
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.entity.Entity;
@@ -25,6 +27,7 @@ import me.hawkcore.utils.items.Item;
 import me.hpets.objects.Pet;
 import me.hpets.objects.PetStatus;
 import me.hpets.objects.PlayerPet;
+import me.hpets.objects.petutils.enums.StatusPet;
 import me.hpets.utils.ConfigGeral;
 import net.minecraft.server.v1_8_R3.EntityLiving;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
@@ -84,6 +87,11 @@ public class ListenerPets implements Listener {
 		Pet pet = (Pet) entity.getMetadata("pet").get(0).value();
 		if (!pet.getPlayer().getName().equals(p.getName())) return;
 		e.setCancelled(true);
+		if (!p.isSneaking()) {
+			Task.run(()-> entity.setPassenger(p));
+			p.playSound(p.getLocation(), Sound.HORSE_ARMOR, 0.5f, 10);
+			return;
+		}
 		p.openInventory(pet.getInventory());
 		p.updateInventory();
 		p.playSound(p.getLocation(), Sound.CHEST_OPEN, 0.5f, 10);
@@ -120,37 +128,50 @@ public class ListenerPets implements Listener {
 	}
 	
 	@EventHandler
-	public void damage(EntityDamageByEntityEvent e) {
-		Entity attacker = e.getDamager();
-		if (attacker instanceof Projectile) {
-			Projectile tile = (Projectile) attacker;
-			if (tile.getShooter() instanceof Player) attacker = (Player) tile.getShooter();
+	public void damage1(EntityDamageByEntityEvent e) {
+		Entity damager = e.getDamager();
+		if (damager instanceof Projectile) damager = (Entity) ((Projectile)damager).getShooter();
+		Entity entity = e.getEntity();
+		if (entity instanceof Projectile) entity = (Entity) ((Projectile)entity).getShooter();
+		if (damager instanceof Player) {
+			Player p = (Player) damager;
+			PlayerPet pp = PlayerPet.check(p);
+			Pet pet = pp.getPet();
+			PetStatus mode = pet.getMode();
+			if (!pet.isValid() || mode.getStatus() == StatusPet.PASSIVE) return;
+			if (pet.getEntity().equals(entity)) e.setCancelled(true);
+			else mode.attack((LivingEntity) entity);
 		}
-		if (!(attacker instanceof Player)) {
-			Entity entity = e.getEntity();
-			if (entity instanceof Projectile) {
-				Projectile tile = (Projectile) entity;
-				entity = (Entity) tile.getShooter();
-			}
-			if (!(entity instanceof Player)) {
-				if (!entity.hasMetadata("pet")) return;
-				Pet pet = (Pet) entity.getMetadata("pet").get(0).value();
-				pet.getMode().attack((LivingEntity) attacker);
-			}
+	}
+	
+	@EventHandler
+	public void damage2(EntityDamageByEntityEvent e) {
+		Entity damager = e.getDamager();
+		if (damager instanceof Projectile) damager = (Entity) ((Projectile)damager).getShooter();
+		Entity entity = e.getEntity();
+		if (entity instanceof Projectile) entity = (Entity) ((Projectile)entity).getShooter();
+		if (entity instanceof Player) {
 			Player p = (Player) entity;
 			PlayerPet pp = PlayerPet.check(p);
 			Pet pet = pp.getPet();
-			if (pet.getEntity() == null) return;
 			PetStatus mode = pet.getMode();
-			mode.attack((LivingEntity) attacker);
-			return;
+			if (!pet.isValid() || mode.getStatus() == StatusPet.PASSIVE) return;
+			mode.attack((LivingEntity) damager);
 		}
-		Player p = (Player) attacker;
-		PlayerPet pp = PlayerPet.check(p);
-		Pet pet = pp.getPet();
-		if (pet.getEntity() == null) return;
-		PetStatus mode = pet.getMode();
-		mode.attack((LivingEntity) e.getEntity());
+	}
+	
+	@EventHandler
+	public void damage3(EntityDamageByEntityEvent e) {
+		Entity damager = e.getDamager();
+		if (damager instanceof Projectile) damager = (Entity) ((Projectile)damager).getShooter();
+		Entity entity = e.getEntity();
+		if (entity instanceof Projectile) entity = (Entity) ((Projectile)entity).getShooter();
+		if (entity.hasMetadata("pet")) {
+			Pet pet = (Pet) entity.getMetadata("pet").get(0).value();
+			PetStatus mode = pet.getMode();
+			if (mode.getStatus() == StatusPet.PASSIVE) return;
+			mode.attack((LivingEntity) damager);
+		}
 	}
 	
 }

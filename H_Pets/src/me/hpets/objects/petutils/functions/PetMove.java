@@ -25,8 +25,8 @@ import me.hpets.objects.petutils.enums.StatusPet;
 public class PetMove extends PetFunctions implements Runnable {
 	
 	private API api = API.get();
-	private double attackDelay = 0;
-	private double attackDamage = 0.5;
+	private double attackDelay = 350;
+	private double attackDamage = 2;
 	
 	public PetMove(PlayerPet player, Pet pet) {
 		super(player, pet);
@@ -45,8 +45,18 @@ public class PetMove extends PetFunctions implements Runnable {
 		PetStatus mode = pet.getMode();
 		StatusPet status = mode.getStatus();
 		double speed = pet.getSpeed().getValue();
+		
+		if (entity.getPassenger() != null && entity.getPassenger().equals(p)) {
+			api.makeEntityMoveTo(entity, api.getLocationInFrontEntity(p, 3.5), speed);
+			return;
+		}
 		if (mode.getTarget() != null && mode.getTarget() instanceof Item) return;
-		if (status == StatusPet.PASSIVE) {
+		if (mode.getTarget() != null && new Distance(mode.getTarget().getLocation(), entity.getLocation()).value() > 16) {
+			mode.setTarget(null);
+			return;
+		}
+		if (status == StatusPet.PASSIVE || mode.getTarget() == null) {
+			if (mode.getTarget() != null) mode.setTarget(null);
 			Location loc = p.getLocation();
 			Distance distance = new Distance(loc, entity.getLocation());
 			double value = distance.value();
@@ -75,7 +85,6 @@ public class PetMove extends PetFunctions implements Runnable {
 					Bukkit.getPluginManager().callEvent(event);
 				});
 			} else {
-				mode.setStatus(StatusPet.PASSIVE);
 				mode.setTarget(null);
 			}
 		}

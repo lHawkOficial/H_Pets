@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 import me.hpets.Core;
 import me.hpets.objects.PlayerPet;
+import me.hpets.objects.petutils.enums.StatusPet;
 
 public class CommandPet implements CommandExecutor {
 
@@ -34,6 +35,18 @@ public class CommandPet implements CommandExecutor {
 			}
 			if (args[0].equalsIgnoreCase("delete")) {
 				pp.getPet().delete();
+				p.sendMessage("deletado");
+				return false;
+			}
+		}
+		if (args.length == 2) {
+			if (args[0].equalsIgnoreCase("status")) {
+				try {
+					pp.getPet().getMode().setStatus(StatusPet.valueOf(args[1].toUpperCase()));
+					p.sendMessage("setado para " + args[1]);
+				} catch (Exception e) {
+					p.sendMessage("erro");
+				}
 				return false;
 			}
 		}
