@@ -20,13 +20,14 @@ import me.hpets.objects.PetStatus;
 import me.hpets.objects.PlayerPet;
 import me.hpets.objects.petutils.PetFunctions;
 import me.hpets.objects.petutils.enums.StatusPet;
+import me.hpets.utils.ConfigGeral;
 
 @Getter
 public class PetMove extends PetFunctions implements Runnable {
 	
 	private API api = API.get();
-	private double attackDelay = 350;
 	private double attackDamage = 2;
+	private ConfigGeral config = ConfigGeral.get();
 	
 	public PetMove(PlayerPet player, Pet pet) {
 		super(player, pet);
@@ -35,24 +36,24 @@ public class PetMove extends PetFunctions implements Runnable {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void run() {
-	
 		PlayerPet player = getPlayer();
 		Pet pet = getPet();
 		Entity entity = pet.getEntity();
 		Player p = player.getPlayer();
 		if (p == null) return;
-		
 		PetStatus mode = pet.getMode();
 		StatusPet status = mode.getStatus();
 		double speed = pet.getSpeed().getValue();
-		
 		if (entity.getPassenger() != null && entity.getPassenger().equals(p)) {
-			api.makeEntityMoveTo(entity, api.getLocationInFrontEntity(p, 3.5), speed/2);
+			api.makeEntityMoveTo(entity, api.getLocationInFrontEntity(p, 3.5), speed/1.25);
 			return;
 		}
 		if (mode.getTarget() != null && mode.getTarget() instanceof Item) return;
-		if (mode.getTarget() != null && new Distance(p.getLocation(), entity.getLocation()).value() > 16) {
-			mode.setTarget(null);
+		if (mode.getTarget() != null && new Distance(p.getLocation(), entity.getLocation()).value() > config.getAttack_max_distance()) {
+			Task.run(()-> {
+				mode.setTarget(null);
+				entity.teleport(p.getLocation());
+			});
 			return;
 		}
 		if (status == StatusPet.PASSIVE || mode.getTarget() == null) {
@@ -61,22 +62,22 @@ public class PetMove extends PetFunctions implements Runnable {
 			Distance distance = new Distance(loc, entity.getLocation());
 			double value = distance.value();
 			if (value <= 5) return;
-			if (value > 16) {
+			if (value > config.getAttack_max_distance()) {
 				Task.run(()-> entity.teleport(p.getLocation()));
 				return;
 			}
 			api.makeEntityMoveTo(entity, p.getLocation(), speed);
-		}else if (System.currentTimeMillis() - mode.getLastDamage() >= attackDelay) {
+		}else if (System.currentTimeMillis() - mode.getLastDamage() >= config.getAttack_delay()) {
 			Entity target = mode.getTarget();
 			if (target != null && !target.isDead() && target.isValid() && target instanceof LivingEntity && !target.getUniqueId().equals(entity.getUniqueId()) && !target.getName().equals(player.getName())) {
 				api.makeEntityMoveTo(entity, target.getLocation(), speed);
 				Distance distance = new Distance(target.getLocation(), entity.getLocation());
 				double value = distance.value();
-				if (value > 16) {
+				if (value > config.getAttack_max_distance()/1.5) {
 					Task.run(()-> entity.teleport(target.getLocation()));
 					return;
 				}
-				if (value > 1.25) return;
+				if (value > config.getAttack_distance()) return;
 				mode.setLastDamage(System.currentTimeMillis());
 				Task.run(()->{
 					((LivingEntity)target).damage(attackDamage, entity);
@@ -88,7 +89,6 @@ public class PetMove extends PetFunctions implements Runnable {
 				mode.setTarget(null);
 			}
 		}
-		
 	}
 	
 }

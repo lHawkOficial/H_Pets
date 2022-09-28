@@ -7,6 +7,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+import lombok.Getter;
 import me.hawkcore.tasks.Task;
 import me.hawkcore.utils.API;
 import me.hawkcore.utils.locations.Distance;
@@ -17,6 +18,7 @@ import me.hpets.objects.petutils.PetFunctions;
 
 public class PetCollectItem extends PetFunctions implements Runnable {
 
+@Getter
 private API api = API.get();
 	
 	private long delayCollect;
@@ -27,7 +29,6 @@ private API api = API.get();
 	
 	@Override
 	public void run() {
-	
 		PlayerPet player = getPlayer();
 		Pet pet = getPet();
 		Entity entity = pet.getEntity();

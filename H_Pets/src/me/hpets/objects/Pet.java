@@ -2,15 +2,18 @@ package me.hpets.objects;
 
 import java.util.ArrayList;
 
+
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -21,6 +24,7 @@ import me.hawkcore.Core;
 import me.hawkcore.tasks.Task;
 import me.hawkcore.utils.locations.Distance;
 import me.hpets.objects.petutils.PetAI;
+import me.hpets.utils.ConfigGeral;
 import net.minecraft.server.v1_8_R3.MojangsonParseException;
 import net.minecraft.server.v1_8_R3.MojangsonParser;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
@@ -76,6 +80,32 @@ public class Pet {
 		return item;
 	}
 	
+	public LivingEntity getEntityNext() {
+		if (entity == null) return null;
+		World world = entity.getWorld();
+		Location loc = entity.getLocation().clone();
+		ConfigGeral config = ConfigGeral.get();
+		Player p = player.getPlayer();
+		if (p == null) return null;
+		double value = config.getAttack_max_distance();
+		LivingEntity et = null;
+		for(Entity entity : world.getEntities()) {
+			if (!(entity instanceof LivingEntity)) continue;
+			if (entity instanceof ArmorStand) continue;
+			if (entity.getUniqueId().equals(p.getUniqueId())) continue;
+			if (entity.getUniqueId().equals(this.entity.getUniqueId())) continue;
+			Distance distance = new Distance(entity.getLocation(), loc);
+			Double v = distance.value();
+			if (v > config.getAttack_max_distance()) continue;
+			if (v <= value) {
+				value = v;
+				et = (LivingEntity) entity;
+				continue;
+			}
+		}
+		return et;
+	}
+	
 	public List<Player> getPlayerNext() {
 		List<Player> list = new ArrayList<>();
 		if (entity == null) return list;
@@ -106,8 +136,8 @@ public class Pet {
 	
 	public void remove() {
 		if (entity == null) return;
-		player.save();
 		entity.remove();
+		player.save();
 	}
 	
 	public void delete() {

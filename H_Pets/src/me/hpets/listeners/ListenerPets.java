@@ -76,6 +76,7 @@ public class ListenerPets implements Listener {
 			}
 			pet.getInventory().clear();
 			pet.getPlayer().hidePet();
+			pet.getMode().setTarget(null);
 		}
 	}
 	
@@ -138,8 +139,8 @@ public class ListenerPets implements Listener {
 			PlayerPet pp = PlayerPet.check(p);
 			Pet pet = pp.getPet();
 			PetStatus mode = pet.getMode();
+			if (pet.isValid() && pet.getEntity().equals(entity)) e.setCancelled(true);
 			if (!pet.isValid() || mode.getStatus() == StatusPet.PASSIVE) return;
-			if (pet.getEntity().equals(entity)) e.setCancelled(true);
 			else mode.attack((LivingEntity) entity);
 		}
 	}

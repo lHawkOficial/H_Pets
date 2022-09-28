@@ -7,6 +7,20 @@ Config:
   # coloque aqui o item que o jogador deve estar segurando para domar o mob (do ItemCreator)
   tameItem: corda
   
+  # maximo de distancia que o pet pode atacar longe do dono.
+  attack_max_distance: 20
+  
+  # delay em ms
+  attack_delay: 350
+  
+  # distancia que o pet vai conseguir atacar o target
+  attack_distance: 1.25
+  
+  use_regions: false
+  # world:nameRegion - regiões aonde o pet poderá atacar, caso contrário o pet será removido.
+  regions:
+  - 'world:__global__'
+  
 # Configure aqui suas mensagens
 Mensagens:
   petTamed: "{tag} &aVoce domou um novo pet para ver os comandos utilize /pet."

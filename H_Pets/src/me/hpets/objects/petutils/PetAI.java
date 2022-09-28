@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.Getter;
 import me.hpets.objects.Pet;
 import me.hpets.objects.PlayerPet;
+import me.hpets.objects.petutils.functions.PetAgressiveMode;
 import me.hpets.objects.petutils.functions.PetCollectItem;
 import me.hpets.objects.petutils.functions.PetMove;
 
@@ -23,6 +24,7 @@ public class PetAI implements Runnable {
 		this.pet = pet;
 		runnables.add(new PetMove(player, pet));
 		runnables.add(new PetCollectItem(player, pet));
+		runnables.add(new PetAgressiveMode(player, pet));
 	}
 	
 	@Override

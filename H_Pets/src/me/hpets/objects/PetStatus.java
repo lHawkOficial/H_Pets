@@ -12,7 +12,7 @@ import me.hpets.objects.petutils.enums.StatusPet;
 public class PetStatus {
 
 	private Pet pet;
-	private StatusPet status = StatusPet.PASSIVE;
+	private StatusPet status = StatusPet.DEFAULT;
 	private Entity target;
 	private long lastDamage;
 	
@@ -21,9 +21,9 @@ public class PetStatus {
 	}
 	
 	public void attack(LivingEntity entity) {
+		if (status == StatusPet.PASSIVE) return;
 		this.lastDamage = System.currentTimeMillis();
 		this.target = entity;
-		this.status = StatusPet.AGRESSIVE;
 	}
 	
 }
