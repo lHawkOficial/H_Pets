@@ -24,6 +24,7 @@ import me.hawkcore.Core;
 import me.hawkcore.tasks.Task;
 import me.hawkcore.utils.locations.Distance;
 import me.hpets.objects.petutils.PetAI;
+import me.hpets.objects.petutils.functions.levels.Speed;
 import me.hpets.utils.ConfigGeral;
 import net.minecraft.server.v1_8_R3.MojangsonParseException;
 import net.minecraft.server.v1_8_R3.MojangsonParser;
@@ -40,7 +41,7 @@ public class Pet {
 	private Inventory inventory;
 	private Task task;
 	private PetAI petAi;
-	private PetSpeed speed;
+	private Speed speed;
 	private NBTTagCompound tag;
 	private PetStatus mode;
 	
@@ -49,7 +50,7 @@ public class Pet {
 		this.inventory = Bukkit.createInventory(null, 9*3, "§8● Inventário do seu pet");
 		this.petAi = new PetAI(player, this);
 		this.task = new Task(petAi).run(1);
-		this.speed = new PetSpeed(this, 10);
+		this.speed = new Speed(this, 10);
 		this.mode = new PetStatus(this);
 	}
 	

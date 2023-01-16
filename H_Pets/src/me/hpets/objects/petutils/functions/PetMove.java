@@ -67,7 +67,7 @@ public class PetMove extends PetFunctions implements Runnable {
 				return;
 			}
 			api.makeEntityMoveTo(entity, p.getLocation(), speed);
-		}else if (System.currentTimeMillis() - mode.getLastDamage() >= config.getAttack_delay()) {
+		} else if (System.currentTimeMillis() - mode.getLastDamage() >= config.getAttack_delay()) {
 			Entity target = mode.getTarget();
 			if (target != null && !target.isDead() && target.isValid() && target instanceof LivingEntity && !target.getUniqueId().equals(entity.getUniqueId()) && !target.getName().equals(player.getName())) {
 				api.makeEntityMoveTo(entity, target.getLocation(), speed);
@@ -84,6 +84,7 @@ public class PetMove extends PetFunctions implements Runnable {
 					EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(entity, target, DamageCause.ENTITY_ATTACK, attackDamage);
 					target.setLastDamageCause(event);
 					Bukkit.getPluginManager().callEvent(event);
+					me.hpets.utils.API.get().playEffectUp(pet);
 				});
 			} else {
 				mode.setTarget(null);

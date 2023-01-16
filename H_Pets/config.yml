@@ -21,6 +21,42 @@ Config:
   regions:
   - 'world:__global__'
   
+# Config geral dos menus
+Menus:
+  menuPet:
+    name: "Comprar Pet"
+    size: 3
+    Icons:
+      pig:
+        type: PIG
+        baby: false
+        ID: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmVlODUxNDg5MmYzZDc4YTMyZTg0NTZmY2JiOGM2MDgxZTIxYjI0NmQ4MmYzOThiZDk2OWZlYzE5ZDNjMjdiMyJ9fX0="
+        name: "&cPorco"
+        price: 1000
+        lore:
+        - ' '
+        - '&7Clique para adquirir este pet!'
+        - '&aValor: &2R$ 1.000'
+        - ' '
+        # maxValue:valueProgressPerKill:damageValue
+        levels_damage:
+        - '50:10:0.25'
+        - '100:10:0.75'
+        - '150:10:1'
+        - '200:10:1.25'
+        - '250:10:1.5'
+        - '300:10:2'
+        - '350:10:2.25'
+        - '400:10:2.5'
+        - '450:10:2.75'
+        - '500:10:3'
+        # maxValue:valueProgressPerKill:speedValue
+        levels_speed:
+        - '50:5:1.75'
+        - '100:5:2'
+        - '150:5:2.25'
+        - '200:5:2.5'
+  
 # Configure aqui suas mensagens
 Mensagens:
   petTamed: "{tag} &aVoce domou um novo pet para ver os comandos utilize /pet."
@@ -32,4 +68,6 @@ Mensagens:
   petHide: "{tag} &cVoce mandou o seu pet para casa! para chama-lo de volta use /pet [Spawn]."
   petSpawn: "{tag} &aSeu pet foi spawnado na sua localizacao."
   petSpawned: "{tag} &cSeu pet ja foi spawnado!"
+  petUpSpeed: "{tag} &aSeu pet evoluiu o level de velocidade! &2level {level}&a! &e+{value} speed&a."
+  petUpDamage: "{tag} &aSeu pet evoluiu o level de dano! &2level {level}&a! &e+{value} dano&a."
   

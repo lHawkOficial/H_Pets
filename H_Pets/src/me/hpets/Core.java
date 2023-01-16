@@ -17,6 +17,7 @@ import me.hpets.listeners.ListenerPlayer;
 import me.hpets.managers.Manager;
 import me.hpets.objects.Pet;
 import me.hpets.objects.PlayerPet;
+import me.hpets.utils.API;
 import me.hpets.utils.ConfigGeral;
 import me.hpets.utils.Mensagens;
 
@@ -29,6 +30,7 @@ public class Core extends JavaPlugin {
 	private Manager manager;
 	private ConfigGeral configgeral;
 	private Mensagens mensagens;
+	private API api;
 	
 	@Override
 	public void onEnable() {
@@ -67,6 +69,7 @@ public class Core extends JavaPlugin {
 	public void reloadPlugin() {
 		reloadConfig();
 		tag = getConfig().getString("Config.tag").replace("&", "§");
+		api = new API();
 		if (manager!=null) {
 			manager.getPlayers().forEach(p -> {
 				Pet pet = p.getPet();

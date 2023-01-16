@@ -12,7 +12,7 @@ import me.hpets.objects.petutils.enums.StatusPet;
 public class PetStatus {
 
 	private Pet pet;
-	private StatusPet status = StatusPet.DEFAULT;
+	private StatusPet status = StatusPet.NORMAL;
 	private Entity target;
 	private long lastDamage;
 	
